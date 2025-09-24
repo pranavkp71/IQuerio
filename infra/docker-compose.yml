@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  fusiondb:
+    image: ankane/pgvector:postgres-15
+    container_name: fusiondb_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: fusion
+      POSTGRES_PASSWORD: fusionpass
+      POSTGRES_DB: fusiondb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: smartbase_backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    volumes:
+      - ../backend/app:/app/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - fusiondb
+    environment:
+      DATABASE_URL: postgresql://fusion:fusionpass@fusiondb:5432/fusiondb
+
+volumes:
+  db_data:
