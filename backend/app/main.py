@@ -1,17 +1,17 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
+from .db import get_db
 
 app = FastAPI(title="SmartBase - Phase1 API")
-
 
 class SQLRequest(BaseModel):
     sql: str
 
-
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "SmartBase", "phase": "phase-1"}
-
 
 @app.post("/optimize")
 async def optimize_sql(payload: SQLRequest):
@@ -58,3 +58,8 @@ async def optimize_sql(payload: SQLRequest):
         "suggestions": suggestions
     }
     return response
+
+@app.get("/db-test")
+async def db_test(session: AsyncSession = Depends(get_db)):
+    result = await session.execute(text("SELECT 1;"))
+    return {"db_connection_test": result.scalar()}
