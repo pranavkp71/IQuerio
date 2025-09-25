@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    environment:
+      - POSTGRES_USER=smartbase_user
+      - POSTGRES_PASSWORD=smartbase_pass
+      - POSTGRES_DB=smartbase_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+volumes:
+  postgres_data:

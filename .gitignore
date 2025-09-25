@@ -3,10 +3,12 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.pyc
 env/
 .venv/
 venv/
 ENV/
+.env
 *.egg-info/
 dist/
 build/
