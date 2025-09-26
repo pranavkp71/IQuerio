@@ -21,11 +21,11 @@ def read_root():
 def test_db_connection():
     try:
         connection = psycopg2.connect(
-            user = os.getenv("DB_USER"),
-            password = os.getenv("DB_PASSWORD"),
-            host = os.getenv("DB_HOST"),
-            port = os.getenv("DB_PORT"),
-            database = os.getenv("DB_NAME")
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT"),
+            database=os.getenv("DB_NAME")
         )
         cursor = connection.cursor()
         cursor.execute("SELECT version();")
@@ -35,13 +35,14 @@ def test_db_connection():
         return {"status": "Connected", "version": db_version[0]}
     except OperationalError as e:
         return {"status": "Failed", "error": str(e)}
-    
+
 @app.post("/optimize")
 def optimize_endpoint(request: OptimizeRequest):
     result = optimize_query(request.query)
     return {
         "query": request.query,
-        "optimized_query": result["optimized_query"], 
+        "optimized_query": result["optimized_query"],
         "issues": result["issues"],
-        "suggestions": result["suggestions"]
+        "suggestions": result["suggestions"],
+        "explain_plan": result["explain_plan"]
     }
