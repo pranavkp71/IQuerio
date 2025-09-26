@@ -3,6 +3,11 @@ import psycopg2
 from psycopg2 import OperationalError
 from dotenv import load_dotenv
 import os
+from .optimizer import optimize_query
+from pydantic import BaseModel
+
+class OptimizeRequest(BaseModel):
+    query: str
 
 load_dotenv()
 
@@ -30,3 +35,13 @@ def test_db_connection():
         return {"status": "Connected", "version": db_version[0]}
     except OperationalError as e:
         return {"status": "Failed", "error": str(e)}
+    
+@app.post("/optimize")
+def optimize_endpoint(request: OptimizeRequest):
+    result = optimize_query(request.query)
+    return {
+        "query": request.query,
+        "optimized_query": result["optimized_query"], 
+        "issues": result["issues"],
+        "suggestions": result["suggestions"]
+    }
