@@ -1,14 +1,14 @@
-# SmartBase
+# IQuerio
 
-**SmartBase** — Next-Gen Database Assistant (Phase 1 MVP)
+**IQuerio** — Next-Gen Database Assistant (Phase 1 MVP)
 
-This repository contains the Phase 1 skeleton for SmartBase:
+This repository contains the Phase 1 skeleton for IQuerio:
 - AI-Powered SQL Optimizer (backend skeleton)
 - Vector + SQL Hybrid Playground (backlog; backend + pgvector-ready)
 - Local dev via Docker Compose (Postgres with pgvector + FastAPI backend)
 
 ## Setup
-1. Clone repo: `git clone <repo-url>`
+1. Clone repo: `git clone https://github.com/pranavkp71/IQuerio.git`
 2. Start Postgres: `docker-compose up -d`
 3. Install dependencies: `pip install -r requirements.txt`
 4. Set up DB: `python backend/setup_db.py`
