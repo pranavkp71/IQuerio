@@ -1,6 +1,5 @@
 import sqlparse
 from sqlparse.sql import Where
-from sqlparse.tokens import Keyword, DML
 from typing import Dict, List
 import psycopg2
 from psycopg2 import OperationalError
