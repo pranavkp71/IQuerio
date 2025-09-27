@@ -1,8 +1,9 @@
 import click
 from optimizer import optimize_query
 
+
 @click.command()
-@click.argument('query')
+@click.argument("query")
 def optimize(query):
     result = optimize_query(query)
     click.echo(f"Query: {result['original_query']}")
@@ -20,6 +21,7 @@ def optimize(query):
     else:
         click.echo("Suggestions: None")
     click.echo(f"EXPLAIN Plan: {result['explain_plan']}")
+
 
 if __name__ == "__main__":
     optimize()

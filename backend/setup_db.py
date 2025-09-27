@@ -6,6 +6,7 @@ from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
+
 def setup_users_table():
     connection = None
     cursor = None
@@ -15,13 +16,14 @@ def setup_users_table():
             password=os.getenv("DB_PASSWORD"),
             host=os.getenv("DB_HOST"),
             port=os.getenv("DB_PORT"),
-            database=os.getenv("DB_NAME")
+            database=os.getenv("DB_NAME"),
         )
         cursor = connection.cursor()
 
         cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(100),
@@ -29,29 +31,35 @@ def setup_users_table():
                 description TEXT,
                 embedding vector(384)
             );
-        """)
+        """
+        )
 
-        model = SentenceTransformer('all-MiniLM-L6-v2')
+        model = SentenceTransformer("all-MiniLM-L6-v2")
 
         sample_data = [
-            ('Soman', 25, 'Young tech enthusiast who loves AI and startups'),
-            ('Babu', 30, 'Experienced software engineer interested in cloud computing'),
-            ('Chandran', 35, 'Data scientist passionate about machine learning'),
-            ('Dasappan', 28, 'Product manager focused on user experience and design')
+            ("Soman", 25, "Young tech enthusiast who loves AI and startups"),
+            ("Babu", 30, "Experienced software engineer interested in cloud computing"),
+            ("Chandran", 35, "Data scientist passionate about machine learning"),
+            ("Dasappan", 28, "Product manager focused on user experience and design"),
         ]
 
         descriptions = [row[2] for row in sample_data]
         embeddings = model.encode(descriptions, convert_to_tensor=False).tolist()
 
         for (name, age, description), embedding in zip(sample_data, embeddings):
-            cursor.execute("""
+            cursor.execute(
+                """
                 INSERT INTO users (name, age, description, embedding)
                 VALUES (%s, %s, %s, %s)
                 ON CONFLICT DO NOTHING;
-            """, (name, age, description, embedding))
+            """,
+                (name, age, description, embedding),
+            )
 
         connection.commit()
-        print("Users table created, pgvector enabled, and populated with embeddings successfully.")
+        print(
+            "Users table created, pgvector enabled, and populated with embeddings successfully."
+        )
     except (OperationalError, Exception) as e:
         print(f"Error setting up users table: {e}")
     finally:
@@ -59,6 +67,7 @@ def setup_users_table():
             cursor.close()
         if connection is not None:
             connection.close()
+
 
 if __name__ == "__main__":
     setup_users_table()
