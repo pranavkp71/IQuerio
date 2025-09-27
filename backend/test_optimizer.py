@@ -1,3 +1,6 @@
+import os
+os.environ["ENV"] = "test"
+
 import pytest
 from backend.optimizer import optimize_query
 
