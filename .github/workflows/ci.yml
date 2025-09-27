@@ -1,0 +1,34 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: ankane/pgvector:latest
+        env:
+          POSTGRES_USER: smartbase_user
+          POSTGRES_PASSWORD: smartbase_pass
+          POSTGRES_DB: smartbase_db
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run tests
+        env:
+          DB_USER: smartbase_user
+          DB_PASSWORD: smartbase_pass
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: smartbase_db
+        run: pytest backend/
+      - name: Lint
+        run: pip install black flake8 && black --check backend/ && flake8 backend/

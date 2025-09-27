@@ -7,7 +7,6 @@ from sentence_transformers import SentenceTransformer
 load_dotenv()
 
 def setup_users_table():
-    """Create users table, enable pgvector, and insert sample data with embeddings."""
     connection = None
     cursor = None
     try:
@@ -20,10 +19,8 @@ def setup_users_table():
         )
         cursor = connection.cursor()
 
-        # Enable pgvector extension
         cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 
-        # Create users table with embedding column
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -34,10 +31,8 @@ def setup_users_table():
             );
         """)
 
-        # Load embedding model
         model = SentenceTransformer('all-MiniLM-L6-v2')
 
-        # Sample data with descriptions
         sample_data = [
             ('Soman', 25, 'Young tech enthusiast who loves AI and startups'),
             ('Babu', 30, 'Experienced software engineer interested in cloud computing'),
@@ -45,11 +40,9 @@ def setup_users_table():
             ('Dasappan', 28, 'Product manager focused on user experience and design')
         ]
 
-        # Generate embeddings
         descriptions = [row[2] for row in sample_data]
         embeddings = model.encode(descriptions, convert_to_tensor=False).tolist()
 
-        # Insert data with embeddings
         for (name, age, description), embedding in zip(sample_data, embeddings):
             cursor.execute("""
                 INSERT INTO users (name, age, description, embedding)
