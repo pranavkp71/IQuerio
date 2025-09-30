@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import OperationalError
 from dotenv import load_dotenv
 import os
-
+                       
 load_dotenv()
 
 try:
