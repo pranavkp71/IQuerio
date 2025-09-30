@@ -12,6 +12,11 @@ jobs:
           POSTGRES_DB: smartbase_db
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -22,6 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install .
       - name: Run tests
         env:
           DB_USER: smartbase_user
