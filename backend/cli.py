@@ -3,9 +3,14 @@ import requests
 import json
 import argparse
 
+
 def main():
-    parser = argparse.ArgumentParser(description="SmartBase CLI: SQL Optimizer & Vector Playground")
-    parser.add_argument("command", choices=["optimize", "search", "upload"], help="Command to run")
+    parser = argparse.ArgumentParser(
+        description="SmartBase CLI: SQL Optimizer & Vector Playground"
+    )
+    parser.add_argument(
+        "command", choices=["optimize", "search", "upload"], help="Command to run"
+    )
     parser.add_argument("--query", help="SQL query for optimize")
     parser.add_argument("--description", help="Description for search/upload")
     parser.add_argument("--user-id", type=int, help="User ID for upload")
@@ -21,9 +26,7 @@ def main():
                 print("Error: --query required for optimize")
                 sys.exit(1)
             response = requests.post(
-                f"{BASE_URL}/optimize",
-                json={"query": args.query},
-                headers=headers
+                f"{BASE_URL}/optimize", json={"query": args.query}, headers=headers
             )
         elif args.command == "search":
             if not args.description:
@@ -32,7 +35,7 @@ def main():
             response = requests.post(
                 f"{BASE_URL}/search-similar",
                 json={"description": args.description, "limit": args.limit},
-                headers=headers
+                headers=headers,
             )
         elif args.command == "upload":
             if not args.user_id or not args.description:
@@ -41,12 +44,13 @@ def main():
             response = requests.post(
                 f"{BASE_URL}/upload-embedding",
                 json={"user_id": args.user_id, "description": args.description},
-                headers=headers
+                headers=headers,
             )
         print(json.dumps(response.json(), indent=2))
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
