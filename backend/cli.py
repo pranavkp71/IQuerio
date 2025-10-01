@@ -6,12 +6,16 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser(
-        description="SmartBase CLI: SQL Optimizer & Vector Playground"
+        description="IQuerio CLI: SQL Optimizer & Vector Playground"
     )
     parser.add_argument(
-        "command", choices=["optimize", "search", "upload"], help="Command to run"
+        "command",
+        choices=["optimize", "search", "upload", "nl-query"],
+        help="Command to run",
     )
-    parser.add_argument("--query", help="SQL query for optimize")
+    parser.add_argument(
+        "--query", help="SQL query for optimize or NL query for nl-query"
+    )
     parser.add_argument("--description", help="Description for search/upload")
     parser.add_argument("--user-id", type=int, help="User ID for upload")
     parser.add_argument("--limit", type=int, default=5, help="Limit for search results")
@@ -45,6 +49,13 @@ def main():
                 f"{BASE_URL}/upload-embedding",
                 json={"user_id": args.user_id, "description": args.description},
                 headers=headers,
+            )
+        elif args.command == "nl-query":
+            if not args.query:
+                print("Error: --query required for nl-query")
+                sys.exit(1)
+            response = requests.post(
+                f"{BASE_URL}/nl-query", json={"query": args.query}, headers=headers
             )
         print(json.dumps(response.json(), indent=2))
     except Exception as e:
