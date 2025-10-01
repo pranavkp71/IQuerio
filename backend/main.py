@@ -31,10 +31,6 @@ class NLQueryRequest(BaseModel):
     query: str
 
 
-class NLQueryRequest(BaseModel):
-    query: str
-
-
 @app.get("/")
 def read_root():
     return {"message": "IQuerio MVP is alive."}
