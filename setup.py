@@ -10,7 +10,7 @@ setup(
         "sqlparse==0.4.4",
         "psycopg2==2.9.9",
         "python-dotenv==1.0.0",
-        "sentence-transformers==2.2.2",
+        "sentence-transformers==5.1.1",
     ],
     entry_points={"console_scripts": ["db-toolkit = backend.cli:main"]},
     author="Pranav",
