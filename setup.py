@@ -13,7 +13,6 @@ setup(
         "sentence-transformers==5.1.1",
         "huggingface-hub==0.35.3",
     ],
-    
     entry_points={"console_scripts": ["db-toolkit = backend.cli:main"]},
     author="Pranav",
     description="AI-powered SQL optimizer and vector playground",

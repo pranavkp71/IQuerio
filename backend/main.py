@@ -12,19 +12,24 @@ load_dotenv()
 app = FastAPI()
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
+
 class OptimizeRequest(BaseModel):
     query: str
+
 
 class UploadEmbeddingRequest(BaseModel):
     user_id: int
     description: str
 
+
 class SearchSimilarRequest(BaseModel):
     description: str
     limit: int = 3
 
+
 class NLQueryRequest(BaseModel):
     query: str
+
 
 class NLQueryRequest(BaseModel):
     query: str
@@ -33,6 +38,7 @@ class NLQueryRequest(BaseModel):
 @app.get("/")
 def read_root():
     return {"message": "IQuerio MVP is alive."}
+
 
 @app.get("/db-test")
 def test_db_connection():
@@ -53,6 +59,7 @@ def test_db_connection():
     except OperationalError as e:
         return {"status": "Failed", "error": str(e)}
 
+
 @app.post("/optimize")
 def optimize_endpoint(request: OptimizeRequest):
     result = optimize_query(request.query)
@@ -63,6 +70,7 @@ def optimize_endpoint(request: OptimizeRequest):
         "suggestions": result["suggestions"],
         "explain_plan": result["explain_plan"],
     }
+
 
 @app.post("/upload-embedding")
 def upload_embedding(request: UploadEmbeddingRequest):
@@ -89,6 +97,7 @@ def upload_embedding(request: UploadEmbeddingRequest):
         return {"status": "Embedding uploaded successfully", "user_id": request.user_id}
     except Exception as e:
         return {"status": "Failed", "error": str(e)}
+
 
 @app.post("/search-similar")
 def search_similar(request: SearchSimilarRequest):
@@ -129,6 +138,7 @@ def search_similar(request: SearchSimilarRequest):
         }
     except Exception as e:
         return {"status": "Failed", "error": str(e)}
+
 
 @app.post("/nl-query")
 def nl_query(request: NLQueryRequest):
