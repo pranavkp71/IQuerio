@@ -11,7 +11,9 @@ setup(
         "psycopg2==2.9.9",
         "python-dotenv==1.0.0",
         "sentence-transformers==5.1.1",
+        "huggingface-hub==0.35.3",
     ],
+    
     entry_points={"console_scripts": ["db-toolkit = backend.cli:main"]},
     author="Pranav",
     description="AI-powered SQL optimizer and vector playground",
