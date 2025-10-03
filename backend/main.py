@@ -86,6 +86,8 @@ def create_access_token(data: dict) -> str:
 
 @app.post("/register")
 def register_user(request: RegisterRequest):
+    connection = None
+    cursor = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -113,8 +115,10 @@ def register_user(request: RegisterRequest):
             )
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 
 @app.post("/login", response_model=Token)
