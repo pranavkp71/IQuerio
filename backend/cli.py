@@ -10,7 +10,7 @@ def main():
     )
     parser.add_argument(
         "command",
-        choices=["optimize", "search", "upload", "nl-query"],
+        choices=["optimize", "search", "upload", "nl-query", "register", "login"],
         help="Command to run",
     )
     parser.add_argument(
@@ -19,6 +19,9 @@ def main():
     parser.add_argument("--description", help="Description for search/upload")
     parser.add_argument("--user-id", type=int, help="User ID for upload")
     parser.add_argument("--limit", type=int, default=5, help="Limit for search results")
+    parser.add_argument("--username", help="Username for register")
+    parser.add_argument("--email", help="Email for register/login")
+    parser.add_argument("--password", help="Password for register/login")
     args = parser.parse_args()
 
     BASE_URL = "http://127.0.0.1:8000"
@@ -56,6 +59,30 @@ def main():
                 sys.exit(1)
             response = requests.post(
                 f"{BASE_URL}/nl-query", json={"query": args.query}, headers=headers
+            )
+        elif args.command == "register":
+            if not args.username or not args.email or not args.password:
+                print(
+                    "Error: --username, --email, and --password required for register"
+                )
+                sys.exit(1)
+            response = requests.post(
+                f"{BASE_URL}/register",
+                json={
+                    "username": args.username,
+                    "email": args.email,
+                    "password": args.password,
+                },
+                headers=headers,
+            )
+        elif args.command == "login":
+            if not args.email or not args.password:
+                print("Error: --email and --password required for login")
+                sys.exit(1)
+            response = requests.post(
+                f"{BASE_URL}/login",
+                json={"email": args.email, "password": args.password},
+                headers=headers,
             )
         print(json.dumps(response.json(), indent=2))
     except Exception as e:
