@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2 import OperationalError
+from psycopg2 import Error as PsycopgError
 from dotenv import load_dotenv
 import os
 from sentence_transformers import SentenceTransformer
@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 load_dotenv()
 
 
-def setup_users_table():
+def setup_database():
     connection = None
     cursor = None
     try:
@@ -20,6 +20,20 @@ def setup_users_table():
         )
         cursor = connection.cursor()
 
+        # Create auth_users table for login/registration
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS auth_users (
+                id SERIAL PRIMARY KEY,
+                Username VARCHAR(50) UNIQUE NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+        """
+        )
+
+        # Creating users table for vector playgroung
         cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 
         cursor.execute(
@@ -34,6 +48,7 @@ def setup_users_table():
         """
         )
 
+        # Insert sample daa with embeddings
         model = SentenceTransformer("all-MiniLM-L6-v2")
 
         sample_data = [
@@ -46,28 +61,35 @@ def setup_users_table():
         descriptions = [row[2] for row in sample_data]
         embeddings = model.encode(descriptions, convert_to_tensor=False).tolist()
 
+        inserted = 0
+
         for (name, age, description), embedding in zip(sample_data, embeddings):
             cursor.execute(
                 """
                 INSERT INTO users (name, age, description, embedding)
                 VALUES (%s, %s, %s, %s)
-                ON CONFLICT DO NOTHING;
+                ON CONFLICT DO NOTHING
+                RETURNING id;
             """,
                 (name, age, description, embedding),
             )
+            if cursor.fetchone():
+                inserted += 1
 
         connection.commit()
         print(
-            "Users table created, pgvector enabled, and populated with embeddings successfully."
+            f"Databse setup complete: auth users and users tables created, pgvector enabled, {inserted}/{len(sample_data)} sample users inserted."
         )
-    except (OperationalError, Exception) as e:
-        print(f"Error setting up users table: {e}")
+    except PsycopgError as e:
+        print(f"Database error during setup: {e}")
+    except Exception as e:
+        print(f"Unexpected error during setup: {e}")
     finally:
-        if cursor is not None:
+        if cursor:
             cursor.close()
-        if connection is not None:
+        if connection:
             connection.close()
 
 
 if __name__ == "__main__":
-    setup_users_table()
+    setup_database()
