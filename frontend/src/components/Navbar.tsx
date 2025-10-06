@@ -11,6 +11,7 @@ export default function Navbar() {
           <a href="#features" className="hover:text-white">Features</a>
           <a href="#how" className="hover:text-white">How it works</a>
           <a href="#roadmap" className="hover:text-white">Roadmap</a>
+          <a href="/playground" className="hover:text-white">Playground</a>
           <a href="https://github.com/pranavkp71/IQuerio" target="_blank" className="hover:text-white">GitHub</a>
         </nav>
         <div className="flex gap-3">

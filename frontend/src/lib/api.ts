@@ -17,6 +17,7 @@ export const api = {
   dbTest: () => request<{ status: string; version?: string; error?: string }>(`/db-test`),
   optimize: (query: string) => request(`/optimize`, { method: 'POST', body: JSON.stringify({ query }) }),
   searchSimilar: (description: string, limit = 3) => request(`/search-similar`, { method: 'POST', body: JSON.stringify({ description, limit }) }),
+  nlQuery: (query: string) => request(`/nl-query`, { method: 'POST', body: JSON.stringify({ query }) }),
 }
 
 export type OptimizeResult = {

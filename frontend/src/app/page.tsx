@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/Navbar'
 import CodeBlock from '@/components/CodeBlock'
+import Icon from '@/components/Icon'
 import { api, OptimizeResult } from '@/lib/api'
 import FAQ from '@/components/FAQ'
 
@@ -37,7 +38,7 @@ export default function Home() {
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-6 pt-20 pb-16">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className="fade-up">
               <h1 className="text-4xl md:text-6xl font-semibold leading-tight">
                 Optimize SQL & Search Data with AI — Instantly.
               </h1>
@@ -64,19 +65,19 @@ export default function Home() {
 
         {/* Features */}
         <section id="features" className="mx-auto max-w-7xl px-6 py-16 grid md:grid-cols-2 gap-10">
-          <Feature title="AI Query Optimizer" icon="⚡" desc="Paste SQL — get back optimized, indexed, and explained output." />
-          <Feature title="Vector Embedding Playground" icon="🔍" desc="Upload or enter data — perform similarity search intuitively." />
-          <Feature title="Natural Language → SQL" icon="🧠" desc="Ask “Top paying customers last month” and get executable SQL." />
-          <Feature title="Schema-Aware Debugging" icon="🛠️" desc="AI auto-detects schema and improves your queries." />
+          <Feature title="AI Query Optimizer" icon="bolt" desc="Paste SQL — get back optimized, indexed, and explained output." />
+          <Feature title="Vector Embedding Playground" icon="search" desc="Upload or enter data — perform similarity search intuitively." />
+          <Feature title="Natural Language → SQL" icon="brain" desc="Ask “Top paying customers last month” and get executable SQL." />
+          <Feature title="Schema-Aware Debugging" icon="wrench" desc="AI auto-detects schema and improves your queries." />
         </section>
 
         {/* How It Works */}
         <section id="how" className="mx-auto max-w-7xl px-6 py-16">
           <h2 className="text-2xl font-semibold mb-8">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Step n="1" t="Connect Database or Paste SQL" />
-            <Step n="2" t="IQuerio Analyzes & Refactors" />
-            <Step n="3" t="You Get Optimized Output & Insights" />
+            <Step n="1" t="Connect Database or Paste SQL" icon="database" />
+            <Step n="2" t="IQuerio Analyzes & Refactors" icon="robot" />
+            <Step n="3" t="You Get Optimized Output & Insights" icon="chart" />
           </div>
         </section>
 
@@ -108,12 +109,13 @@ export default function Home() {
           <h2 className="text-2xl font-semibold mb-8">Popular Use Cases</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              {t:'Speed up dashboards',d:'Trim heavy queries, add missing indexes, and reduce p95 latency.'},
-              {t:'Find similar users',d:'Upload descriptions and search via pgvector semantic similarity.'},
-              {t:'Answer NL questions',d:'Prompt “top orders last week” and turn it into safe SQL.'},
-            ].map((u,i)=> (
-              <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6">
-                <div className="font-medium">{u.t}</div>
+              {t:'Speed up dashboards',d:'Trim heavy queries, add missing indexes, and reduce p95 latency.',i:'bolt'},
+              {t:'Find similar users',d:'Upload descriptions and search via pgvector semantic similarity.',i:'compass'},
+              {t:'Answer NL questions',d:'Prompt “top orders last week” and turn it into safe SQL.',i:'chat'},
+            ].map((u:any,i)=> (
+              <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6 fade-up">
+                <Icon name={u.i} className="h-6 w-6 text-brand.aqua" />
+                <div className="font-medium mt-1">{u.t}</div>
                 <p className="text-white/70 text-sm mt-2">{u.d}</p>
               </div>
             ))}
@@ -140,22 +142,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="mx-auto max-w-7xl px-6 py-16">
-          <h2 className="text-2xl font-semibold mb-8">What people might say</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {n:'A. Dev',q:'Cut our dashboard query time from 2.4s to 320ms.'},
-              {n:'B. Analyst',q:'Loved the NL→SQL flow for quick ad-hoc questions.'},
-              {n:'C. Founder',q:'Vector search helped us build smart “similar users” in a day.'},
-            ].map((t,i)=> (
-              <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-6">
-                <p className="text-white/80">“{t.q}”</p>
-                <div className="text-white/60 text-sm mt-3">— {t.n}</div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Testimonials removed per request */}
 
         {/* Security & Privacy */}
         <section className="mx-auto max-w-7xl px-6 py-16">
@@ -213,29 +200,36 @@ export default function Home() {
   )
 }
 
-function Feature({ title, desc, icon }: { title: string; desc: string; icon: string }) {
+function Feature({ title, desc, icon }: { title: string; desc: string; icon: any }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-      <div className="text-2xl mb-2">{icon}</div>
-      <div className="font-medium">{title}</div>
-      <p className="text-white/70 text-sm mt-2">{desc}</p>
+    <div className="rounded-xl border border-white/10 bg-white/5 p-6 flex items-start gap-4">
+      <div className="shrink-0 rounded-full border border-brand.aqua/40 bg-brand.aqua/10 p-3 glow">
+        <Icon name={icon} className="h-5 w-5 text-brand.aqua" />
+      </div>
+      <div>
+        <div className="font-medium">{title}</div>
+        <p className="text-white/70 text-sm mt-2">{desc}</p>
+      </div>
     </div>
   )
 }
 
-function Step({ n, t }: { n: string; t: string }) {
+function Step({ n, t, icon }: { n: string; t: string; icon: any }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-      <div className="text-white/60 text-sm">Step {n}</div>
-      <div className="font-medium mt-1">{t}</div>
+      <div className="flex items-center gap-2 text-white/60 text-sm">
+        <span>Step {n}</span>
+        <Icon name={icon} className="h-4 w-4 text-white/60" />
+      </div>
+      <div className="font-medium mt-2">{t}</div>
     </div>
   )
 }
 
-function Persona({ emoji, title, value }: { emoji: string; title: string; value: string }) {
+function Persona({ title, value }: { title: string; value: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-6 text-center">
-      <div className="text-2xl">{emoji}</div>
+      <Icon name="cube" className="h-6 w-6 mx-auto text-brand.aqua" />
       <div className="font-medium mt-2">{title}</div>
       <div className="text-white/70 text-sm mt-1">{value}</div>
     </div>
