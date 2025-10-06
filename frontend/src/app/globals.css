@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ring: 0 0% 100%;
+}
+
+.glow {
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.25);
+}
+
+.aura {
+  background: radial-gradient(60% 60% at 50% 50%, rgba(124,58,237,0.18) 0%, rgba(34,211,238,0.12) 45%, rgba(0,0,0,0) 70%);
+  filter: blur(40px);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up .6s ease-out both;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(124,58,237,.20); }
+  50% { box-shadow: 0 0 50px rgba(34,211,238,.28); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+
