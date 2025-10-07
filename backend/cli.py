@@ -24,7 +24,8 @@ def main():
     parser.add_argument("--password", help="Password for register/login")
     args = parser.parse_args()
 
-    BASE_URL = "http://127.0.0.1:8000"
+    import os
+    BASE_URL = os.getenv("IQUERIO_BASE_URL", "http://127.0.0.1:8000")
     headers = {"Content-Type": "application/json"}
 
     try:

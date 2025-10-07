@@ -150,6 +150,8 @@ def read_root():
 
 @app.get("/db-test")
 def test_db_connection():
+    connection = None
+    cursor = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -159,8 +161,10 @@ def test_db_connection():
     except PsycopgError as e:
         return {"status": "Failed", "error": str(e)}
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 
 @app.post("/optimize")
@@ -177,6 +181,8 @@ def optimize_endpoint(request: OptimizeRequest):
 
 @app.post("/upload-embedding")
 def upload_embedding(request: UploadEmbeddingRequest):
+    connection = None
+    cursor = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -196,12 +202,16 @@ def upload_embedding(request: UploadEmbeddingRequest):
     except PsycopgError as e:
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 
 @app.post("/search-similar")
 def search_similar(request: SearchSimilarRequest):
+    connection = None
+    cursor = None
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -232,12 +242,16 @@ def search_similar(request: SearchSimilarRequest):
     except PsycopgError as e:
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
 
 @app.post("/nl-query")
 def nl_query(request: NLQueryRequest):
+    connection = None
+    cursor = None
     try:
         query = request.query.lower()
         age_match = re.search(r"users (?:over|older than) (\d+)", query)
@@ -255,7 +269,8 @@ def nl_query(request: NLQueryRequest):
             )
         if age_match:
             age = int(age_match.group(1))
-            conditions.append(f"age > {age}")
+            conditions.append("age > %s")
+            params.append(age)
         if conditions:
             sql += " WHERE " + " AND ".join(conditions)
         sql += " ORDER BY distance LIMIT 3"
@@ -279,5 +294,7 @@ def nl_query(request: NLQueryRequest):
     except PsycopgError as e:
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()

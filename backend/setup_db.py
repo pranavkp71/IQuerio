@@ -25,7 +25,7 @@ def setup_database():
             """
             CREATE TABLE IF NOT EXISTS auth_users (
                 id SERIAL PRIMARY KEY,
-                Username VARCHAR(50) UNIQUE NOT NULL,
+                username VARCHAR(50) UNIQUE NOT NULL,
                 email VARCHAR(100) UNIQUE NOT NULL,
                 password_hash VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
