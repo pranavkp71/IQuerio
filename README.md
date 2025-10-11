@@ -2,14 +2,18 @@
 
 **IQuerio** is a next-gen database assistant (Phase 1 MVP) for devs and AI builders. It optimizes SQL queries, performs vector-based similarity searches, and supports natural language queries using Postgres with `pgvector` and a FastAPI backend.
 
+## Features
+Discover IQuerio’s AI-powered tools in the [Features Overview](./docs/features.md).
+
 ## Setup
 1. Clone repo: `git clone https://github.com/pranavkp71/IQuerio`
 2. Install PostgreSQL dev libraries: `sudo apt install libpq-dev python3-dev`
-3. Start Postgres with `pgvector`: `docker-compose up -d`
+3. Create a virtual env: `python3 -m venv .venv` and activate it using `source .venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
-5. Set up DB: `python backend/setup_db.py`
-6. Install CLI: `pip install .`
-7. Run server: `uvicorn backend.main:app --reload`
+5. Start Postgres with pgvector: `docker-compose up -d`
+6. Set up DB: `python backend/setup_db.py`
+7. Install CLI: `pip install .`
+8. Run server: `uvicorn backend.main:app --reload`
 
 ## Usage
 - **SQL Optimizer**:
